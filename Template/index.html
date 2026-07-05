@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>India Agricultural Cultivation Analysis Report | 1997–2021</title>
+  <meta name="description" content="A comprehensive visual exploration of India's agricultural cultivation — covering crop production, seasonal variations, regional distribution, and production trends from 1997 to 2021, powered by Tableau.">
+  <meta name="keywords" content="India agriculture, crop production, Tableau dashboard, agricultural data, farming trends, agricultural analysis, India farming 1997-2021">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&family=Roboto+Slab:wght@300;400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --agri-green: hsl(134, 55%, 28%);
+      --agri-green-light: hsl(134, 45%, 40%);
+      --agri-gold: hsl(42, 90%, 48%);
+      --agri-dark: hsl(150, 30%, 10%);
+      --agri-cream: hsl(48, 50%, 96%);
+    }
+    html, body { max-width: 100%; overflow-x: hidden; scroll-behavior: smooth; }
+    body { background-color: var(--agri-cream); }
+    /* NAV */
+    .header { background: hsla(150,40%,8%,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid hsla(134,50%,30%,0.3); }
+    .navmenu a { color: hsla(120,20%,90%,0.85) !important; font-family:'Poppins',sans-serif; font-size:0.85rem; font-weight:500; }
+    .navmenu a:hover, .navmenu .active { color: hsl(42,90%,65%) !important; }
+    /* HERO */
+    .hero-agri {
+      min-height: 100vh;
+      background: linear-gradient(135deg, hsla(134,60%,10%,0.93) 0%, hsla(150,50%,18%,0.87) 55%, hsla(42,70%,22%,0.80) 100%),
+        url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1600&q=80') center/cover no-repeat;
+      display: flex; align-items: center;
+      padding: 120px 0 80px; position: relative; overflow: hidden;
+    }
+    .hero-agri::before {
+      content:''; position:absolute; inset:0;
+      background: radial-gradient(ellipse at 70% 50%, hsla(42,80%,60%,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:8px;
+      background: hsla(42,80%,60%,0.18); border:1px solid hsla(42,80%,60%,0.38);
+      color:hsl(42,90%,75%); padding:6px 18px; border-radius:50px;
+      font-family:'Poppins',sans-serif; font-size:0.75rem; font-weight:600;
+      letter-spacing:1.4px; text-transform:uppercase; margin-bottom:20px;
+    }
+    .hero-agri h1 {
+      font-family:'Roboto Slab',serif; font-size:clamp(2rem,4.5vw,3.5rem);
+      font-weight:700; color:#fff; line-height:1.2; margin-bottom:20px;
+    }
+    .hero-agri h1 span {
+      background:linear-gradient(90deg,hsl(42,90%,65%),hsl(134,60%,58%));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    }
+    .hero-lead {
+      font-family:'Merriweather',serif; font-size:1rem;
+      color:hsla(120,30%,90%,0.88); line-height:1.9; max-width:600px; margin-bottom:36px;
+    }
+    .hero-cta { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:40px; }
+    .btn-hero-p {
+      display:inline-flex; align-items:center; gap:8px;
+      background:linear-gradient(135deg,hsl(42,90%,48%),hsl(38,85%,38%));
+      color:#fff; font-family:'Poppins',sans-serif; font-weight:600; font-size:0.9rem;
+      padding:14px 30px; border-radius:50px; text-decoration:none;
+      transition:transform 0.3s,box-shadow 0.3s; box-shadow:0 6px 24px hsla(42,80%,40%,0.4);
+    }
+    .btn-hero-p:hover { transform:translateY(-2px); box-shadow:0 10px 32px hsla(42,80%,40%,0.55); color:#fff; }
+    .btn-hero-o {
+      display:inline-flex; align-items:center; gap:8px;
+      background:transparent; color:#fff; font-family:'Poppins',sans-serif;
+      font-weight:600; font-size:0.9rem; padding:13px 28px; border-radius:50px;
+      border:2px solid hsla(255,100%,100%,0.28); text-decoration:none; transition:all 0.3s;
+    }
+    .btn-hero-o:hover { background:hsla(255,100%,100%,0.1); border-color:hsla(255,100%,100%,0.5); color:#fff; }
+    .hero-stats { display:flex; gap:20px; flex-wrap:wrap; }
+    .hero-stat {
+      text-align:center; background:hsla(255,100%,100%,0.07);
+      border:1px solid hsla(255,100%,100%,0.12); backdrop-filter:blur(8px);
+      border-radius:14px; padding:16px 20px; min-width:110px;
+    }
+    .hero-stat .num { display:block; font-family:'Poppins',sans-serif; font-size:1.8rem; font-weight:700; color:hsl(42,90%,65%); line-height:1; }
+    .hero-stat .lbl { display:block; font-size:0.7rem; font-weight:600; color:hsla(120,30%,90%,0.7); text-transform:uppercase; letter-spacing:0.8px; margin-top:5px; }
+    /* METRICS BAND */
+    .metrics-band { background:linear-gradient(90deg,hsl(134,55%,22%),hsl(134,45%,32%)); padding:28px 0; }
+    .metric-item { text-align:center; }
+    .metric-item .val { font-family:'Poppins',sans-serif; font-size:1.2rem; font-weight:700; color:hsl(42,90%,65%); display:block; }
+    .metric-item .desc { font-size:0.75rem; color:hsla(120,20%,90%,0.72); font-weight:500; display:block; margin-top:4px; text-transform:uppercase; letter-spacing:0.7px; }
+    /* SECTION HEADER */
+    .sec-hdr { text-align:center; margin-bottom:52px; }
+    .sec-hdr .stag {
+      display:inline-flex; align-items:center; gap:6px;
+      background:hsl(134,50%,92%); color:var(--agri-green);
+      font-family:'Poppins',sans-serif; font-size:0.7rem; font-weight:700;
+      letter-spacing:1.4px; text-transform:uppercase; padding:5px 14px; border-radius:50px; margin-bottom:12px;
+    }
+    .sec-hdr h2 { font-family:'Roboto Slab',serif; font-size:clamp(1.6rem,3vw,2.3rem); font-weight:700; color:var(--agri-dark); margin-bottom:14px; }
+    .sec-hdr p { font-size:0.97rem; color:#6a7a6a; max-width:680px; margin:0 auto; line-height:1.82; }
+    /* OVERVIEW CARDS */
+    .ov-card {
+      background:var(--agri-cream); border-radius:20px; padding:36px; height:100%;
+      border-left:5px solid var(--agri-green); transition:transform 0.3s,box-shadow 0.3s;
+    }
+    .ov-card:hover { transform:translateY(-4px); box-shadow:0 16px 40px hsla(134,40%,20%,0.12); }
+    .ov-icon { width:58px; height:58px; border-radius:16px; background:linear-gradient(135deg,var(--agri-green),var(--agri-green-light)); display:flex; align-items:center; justify-content:center; margin-bottom:18px; }
+    .ov-icon i { font-size:1.4rem; color:#fff; }
+    .ov-card h4 { font-family:'Roboto Slab',serif; font-size:1.1rem; font-weight:700; color:var(--agri-dark); margin-bottom:10px; }
+    .ov-card p { font-size:0.9rem; color:#5a6a5a; line-height:1.78; margin:0; }
+    /* TOOL CARD */
+    .tool-card { background:linear-gradient(135deg,hsl(134,55%,18%),hsl(134,45%,28%)); color:#fff; border-radius:20px; padding:36px; height:100%; }
+    .tool-card h3 { font-family:'Roboto Slab',serif; font-size:1.45rem; font-weight:700; color:#fff; margin-bottom:14px; }
+    .tool-card p { font-size:0.92rem; color:hsla(120,20%,90%,0.88); line-height:1.82; margin-bottom:22px; }
+    .tbadge { display:inline-flex; align-items:center; gap:6px; background:hsla(42,80%,60%,0.18); border:1px solid hsla(42,80%,60%,0.32); color:hsl(42,90%,68%); padding:7px 16px; border-radius:50px; font-family:'Poppins',sans-serif; font-size:0.75rem; font-weight:600; margin-right:8px; margin-top:6px; }
+    /* INSIGHT ITEM */
+    .ins-item { display:flex; gap:16px; align-items:flex-start; background:var(--agri-cream); border-radius:14px; padding:22px; margin-bottom:16px; border-left:4px solid var(--agri-green-light); transition:transform 0.25s,box-shadow 0.25s; }
+    .ins-item:hover { transform:translateX(4px); box-shadow:0 6px 20px hsla(134,30%,20%,0.1); }
+    .ins-num { width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,var(--agri-green),var(--agri-green-light)); color:#fff; font-family:'Poppins',sans-serif; font-weight:700; font-size:0.9rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .ins-item h5 { font-family:'Roboto Slab',serif; font-size:0.97rem; font-weight:700; color:var(--agri-dark); margin-bottom:5px; }
+    .ins-item p { font-size:0.87rem; color:#5a6a5a; margin:0; line-height:1.72; }
+    /* SCENARIOS */
+    .sc-card { background:#fff; border-radius:22px; overflow:hidden; box-shadow:0 4px 22px hsla(134,30%,20%,0.08); transition:transform 0.35s,box-shadow 0.35s; height:100%; }
+    .sc-card:hover { transform:translateY(-6px); box-shadow:0 20px 48px hsla(134,30%,20%,0.16); }
+    .sc-band { height:7px; }
+    .sc-farmer .sc-band  { background:linear-gradient(90deg,hsl(134,55%,33%),hsl(90,50%,43%)); }
+    .sc-analyst .sc-band { background:linear-gradient(90deg,hsl(200,60%,38%),hsl(220,55%,48%)); }
+    .sc-investor .sc-band{ background:linear-gradient(90deg,hsl(42,90%,43%),hsl(30,70%,43%)); }
+    .sc-body { padding:30px; }
+    .sc-badge { display:inline-flex; align-items:center; gap:6px; font-family:'Poppins',sans-serif; font-size:0.68rem; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; padding:5px 13px; border-radius:50px; margin-bottom:16px; }
+    .sc-farmer .sc-badge  { background:hsl(134,50%,91%); color:hsl(134,55%,26%); }
+    .sc-analyst .sc-badge { background:hsl(200,55%,91%); color:hsl(200,60%,26%); }
+    .sc-investor .sc-badge{ background:hsl(42,80%,91%); color:hsl(42,70%,26%); }
+    .persona { display:flex; align-items:center; gap:14px; margin-bottom:18px; }
+    .avatar { width:58px; height:58px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0; }
+    .sc-farmer .avatar  { background:linear-gradient(135deg,hsl(134,55%,33%),hsl(90,50%,43%)); color:#fff; }
+    .sc-analyst .avatar { background:linear-gradient(135deg,hsl(200,60%,38%),hsl(220,55%,48%)); color:#fff; }
+    .sc-investor .avatar{ background:linear-gradient(135deg,hsl(42,90%,43%),hsl(30,70%,43%)); color:#fff; }
+    .persona .pname { font-family:'Roboto Slab',serif; font-size:1.15rem; font-weight:700; color:var(--agri-dark); margin:0 0 2px; }
+    .persona .prole { font-family:'Poppins',sans-serif; font-size:0.77rem; color:#7a8a7a; margin:0; }
+    .sc-card p { font-size:0.9rem; color:#4a5a4a; line-height:1.84; margin-bottom:18px; }
+    .sc-needs { list-style:none; padding:0; margin:0; }
+    .sc-needs li { display:flex; align-items:flex-start; gap:10px; font-size:0.86rem; color:#4a5a4a; padding:7px 0; border-bottom:1px solid hsl(134,20%,93%); }
+    .sc-needs li:last-child { border-bottom:none; }
+    .sc-needs li i { font-size:0.88rem; margin-top:2px; flex-shrink:0; }
+    .sc-farmer .sc-needs li i  { color:hsl(134,55%,33%); }
+    .sc-analyst .sc-needs li i { color:hsl(200,60%,38%); }
+    .sc-investor .sc-needs li i{ color:hsl(42,70%,33%); }
+    /* VIZ */
+    .viz-wrap { width: 100% !important; max-width: 100% !important; border-radius:16px; overflow-x:auto !important; overflow-y:hidden !important; -webkit-overflow-scrolling:touch; box-shadow:0 8px 38px hsla(134,30%,15%,0.17); border:1px solid hsl(134,25%,87%); display:block !important; }
+    #viz1783255400843, #viz1783255400843 iframe, #viz1783255400843 .tableauViz { width: 1600px !important; min-width: 1600px !important; }
+    /* CONTACT */
+    .cg-card { background:linear-gradient(135deg,hsl(134,55%,16%),hsl(134,45%,26%)); border-radius:20px; padding:38px; color:#fff; height:100%; }
+    .cg-card h3 { font-family:'Roboto Slab',serif; font-size:1.4rem; font-weight:700; color:#fff; margin-bottom:12px; }
+    .cg-card > p { color:hsla(120,20%,90%,0.83); font-size:0.9rem; line-height:1.78; margin-bottom:26px; }
+    .ci { display:flex; align-items:flex-start; gap:14px; margin-bottom:18px; }
+    .ci i { font-size:1.1rem; color:hsl(42,90%,65%); margin-top:2px; }
+    .ci h4 { font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:hsl(42,90%,65%); margin:0 0 2px; }
+    .ci p { color:hsla(120,20%,90%,0.82); margin:0; font-size:0.88rem; }
+    .fwrap { background:hsl(134,20%,97%); border-radius:20px; padding:38px; border:1px solid hsl(134,25%,87%); }
+    .fwrap .form-control { border:2px solid hsl(134,25%,87%); border-radius:10px; padding:12px 16px; font-size:0.9rem; transition:border-color 0.3s; }
+    .fwrap .form-control:focus { border-color:var(--agri-green-light); box-shadow:0 0 0 3px hsla(134,50%,40%,0.14); }
+    .fwrap label { font-family:'Poppins',sans-serif; font-size:0.78rem; font-weight:600; color:#3a4a3a; margin-bottom:5px; display:block; }
+    .btn-send { background:linear-gradient(135deg,var(--agri-green),var(--agri-green-light)); color:#fff; border:none; border-radius:50px; padding:13px 34px; font-family:'Poppins',sans-serif; font-weight:600; font-size:0.9rem; cursor:pointer; transition:transform 0.3s,box-shadow 0.3s; box-shadow:0 6px 20px hsla(134,50%,30%,0.35); }
+    .btn-send:hover { transform:translateY(-2px); box-shadow:0 10px 28px hsla(134,50%,30%,0.5); }
+    /* FOOTER */
+    .agri-footer { background:linear-gradient(135deg,hsl(150,50%,7%),hsl(134,45%,12%)); color:hsla(120,20%,90%,0.75); padding:48px 0 28px; text-align:center; }
+    .agri-footer .sn { font-family:'Roboto Slab',serif; font-size:1.4rem; font-weight:700; color:#fff; margin-bottom:8px; }
+    .agri-footer > .container > p { font-size:0.87rem; line-height:1.78; max-width:480px; margin:0 auto 22px; }
+    .agri-footer .sl a { width:38px; height:38px; border-radius:50%; border:1px solid hsla(120,20%,70%,0.22); display:inline-flex; align-items:center; justify-content:center; color:hsla(120,20%,90%,0.65); font-size:0.9rem; margin:0 4px; transition:all 0.3s; }
+    .agri-footer .sl a:hover { background:var(--agri-green-light); border-color:var(--agri-green-light); color:#fff; }
+    .agri-footer .cp { font-size:0.8rem; color:hsla(120,20%,80%,0.5); margin-top:24px; }
+    .agri-footer .cr { font-size:0.75rem; color:hsla(120,20%,80%,0.37); margin-top:5px; }
+    .agri-footer .cr a { color:hsla(42,80%,65%,0.65); }
+    /* SCROLL TOP */
+    .scroll-top { background-color: var(--agri-green) !important; }
+    @media (max-width:768px) { .hero-stats { gap:12px; } .hero-stat { padding:12px 14px; min-width:85px; } }
+  </style>
+</head>
+
+<body class="index-page">
+
+  <header id="header" class="header d-flex align-items-center position-relative fixed-top">
+    <div class="container-fluid position-relative d-flex align-items-center justify-content-between">
+      <a href="index.html" class="logo d-flex align-items-center me-auto me-xl-0" style="text-decoration:none;">
+        <i class="bi bi-flower1 me-2" style="font-size:1.4rem; color:hsl(42,90%,60%);"></i>
+        <h1 class="sitename" style="color:#fff; font-family:'Roboto Slab',serif; font-size:1.15rem; margin:0;">AgriVision India</h1>
+      </a>
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="#hero" class="active">Home</a></li>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#scenarios">Scenarios</a></li>
+          <li><a href="#dashboard">Dashboard</a></li>
+          <li><a href="#story">Story</a></li>
+          <li><a href="#insights">Insights</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list" style="color:#fff;"></i>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- HERO -->
+    <section id="hero" class="hero-agri">
+      <div class="container">
+        <div class="row align-items-center gy-5">
+          <div class="col-lg-7" data-aos="fade-right" data-aos-delay="100">
+            <span class="hero-badge"><i class="bi bi-bar-chart-line-fill"></i> Visual Analytics Report &middot; Tableau</span>
+            <h1>India's Agricultural<br><span>Cultivation Analysis</span></h1>
+            <p class="hero-lead">
+              A comprehensive visual exploration of key aspects and trends in India's agricultural sector &mdash; covering crop production, seasonal variations, regional distribution, and overall production trends from <strong style="color:hsl(42,90%,75%)">1997 to 2021</strong>.
+            </p>
+            <div class="hero-cta">
+              <a href="#dashboard" class="btn-hero-p"><i class="bi bi-play-circle-fill"></i> Explore Dashboard</a>
+              <a href="#story" class="btn-hero-o"><i class="bi bi-book-half"></i> Read Story</a>
+              <a href="#scenarios" class="btn-hero-o"><i class="bi bi-people-fill"></i> View Scenarios</a>
+            </div>
+            <div class="hero-stats">
+              <div class="hero-stat"><span class="num">25</span><span class="lbl">Years of Data</span></div>
+              <div class="hero-stat"><span class="num">36</span><span class="lbl">States &amp; UTs</span></div>
+              <div class="hero-stat"><span class="num">100+</span><span class="lbl">Crop Types</span></div>
+              <div class="hero-stat"><span class="num">3</span><span class="lbl">Stakeholders</span></div>
+            </div>
+          </div>
+          <div class="col-lg-5 d-flex justify-content-center" data-aos="fade-left" data-aos-delay="300">
+            <div style="position:relative;text-align:center;">
+              <div style="width:320px;height:320px;background:hsla(42,80%,60%,0.07);border:1px solid hsla(42,80%,60%,0.18);border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;">
+                <div style="width:240px;height:240px;background:hsla(134,60%,40%,0.14);border:1px solid hsla(134,60%,50%,0.22);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                  <i class="bi bi-globe-asia-australia" style="font-size:6.5rem;color:hsl(42,90%,65%);opacity:0.9;"></i>
+                </div>
+                <div style="position:absolute;top:14px;right:44px;width:13px;height:13px;background:hsl(42,90%,65%);border-radius:50%;box-shadow:0 0 12px hsl(42,90%,65%);"></div>
+                <div style="position:absolute;bottom:28px;left:18px;width:9px;height:9px;background:hsl(134,60%,55%);border-radius:50%;box-shadow:0 0 10px hsl(134,60%,55%);"></div>
+                <div style="position:absolute;top:50%;right:-8px;width:7px;height:7px;background:hsl(200,60%,60%);border-radius:50%;"></div>
+              </div>
+              <div style="position:absolute;top:8px;left:-24px;background:hsla(255,100%,100%,0.1);backdrop-filter:blur(10px);border:1px solid hsla(255,100%,100%,0.14);border-radius:14px;padding:13px 17px;text-align:left;">
+                <div style="font-size:0.68rem;color:hsl(42,90%,70%);font-family:'Poppins',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:3px;">Top Crop 2021</div>
+                <div style="font-size:0.97rem;color:#fff;font-family:'Roboto Slab',serif;font-weight:700;">🌾 Rice</div>
+              </div>
+              <div style="position:absolute;bottom:18px;right:-16px;background:hsla(255,100%,100%,0.1);backdrop-filter:blur(10px);border:1px solid hsla(255,100%,100%,0.14);border-radius:14px;padding:13px 17px;text-align:left;">
+                <div style="font-size:0.68rem;color:hsl(134,60%,65%);font-family:'Poppins',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:3px;">Growth Trend</div>
+                <div style="font-size:0.97rem;color:#fff;font-family:'Roboto Slab',serif;font-weight:700;">📈 +38%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- METRICS BAND -->
+    <div class="metrics-band">
+      <div class="container">
+        <div class="row gy-3">
+          <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="100">
+            <div class="metric-item"><span class="val">🌾 Kharif</span><span class="desc">Summer Season Crops</span></div>
+          </div>
+          <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="200">
+            <div class="metric-item"><span class="val">🌿 Rabi</span><span class="desc">Winter Season Crops</span></div>
+          </div>
+          <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="300">
+            <div class="metric-item"><span class="val">🍃 Zaid</span><span class="desc">Summer Short Season</span></div>
+          </div>
+          <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="400">
+            <div class="metric-item"><span class="val">📊 Tableau</span><span class="desc">Powered Visual Analytics</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <section id="overview" class="section" style="background:#fff;padding:90px 0;">
+      <div class="container">
+        <div class="sec-hdr" data-aos="fade-up">
+          <span class="stag"><i class="bi bi-info-circle-fill"></i> About This Report</span>
+          <h2>Comprehensive Agricultural Analysis</h2>
+          <p>This report delves into the captivating realm of India's agricultural cultivation, providing a comprehensive visual exploration of key aspects and trends in the agricultural sector. Through visual representations, readers can gain valuable insights into crop production, seasonal variations, regional distribution, and overall production trends. These visualizations enable intuitive analysis, allowing stakeholders to uncover patterns, identify areas of growth or concern, and make data-driven decisions.</p>
+        </div>
+        <div class="row gy-4">
+          <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="ov-card">
+              <div class="ov-icon"><i class="bi bi-bar-chart-line-fill"></i></div>
+              <h4>Crop Production</h4>
+              <p>Deep-dive into historical crop production volumes across India's diverse agricultural landscape spanning 25 years of data.</p>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+            <div class="ov-card">
+              <div class="ov-icon"><i class="bi bi-calendar3"></i></div>
+              <h4>Seasonal Variations</h4>
+              <p>Analyze Kharif, Rabi, and Zaid seasonal patterns to understand how climate and seasons shape agricultural output.</p>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+            <div class="ov-card">
+              <div class="ov-icon"><i class="bi bi-geo-alt-fill"></i></div>
+              <h4>Regional Distribution</h4>
+              <p>Explore state-wise and district-level production distribution to identify high-yield regions and underperformers.</p>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+            <div class="ov-card">
+              <div class="ov-icon"><i class="bi bi-graph-up-arrow"></i></div>
+              <h4>Production Trends</h4>
+              <p>Uncover long-term growth trends, identify areas of concern, and make data-driven decisions with interactive Tableau visuals.</p>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-5 align-items-start" data-aos="fade-up" data-aos-delay="200">
+          <div class="col-lg-6 mb-4 mb-lg-0">
+            <div class="tool-card">
+              <i class="bi bi-lightning-charge-fill" style="font-size:1.9rem;color:hsl(42,90%,65%);margin-bottom:12px;display:block;"></i>
+              <h3>Powered by Tableau</h3>
+              <p>By harnessing the power of Tableau, this report not only presents the data in a visually appealing manner but also provides an interactive experience for readers to explore the intricacies of India's agricultural cultivation. To extract insights from the data and put the data in the form of visualizations, Dashboards and Story, we employed the Tableau tool.</p>
+              <span class="tbadge"><i class="bi bi-check2-circle"></i> Interactive Dashboards</span>
+              <span class="tbadge"><i class="bi bi-check2-circle"></i> Visual Stories</span>
+              <span class="tbadge"><i class="bi bi-check2-circle"></i> Data-Driven Insights</span>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <h3 style="font-family:'Roboto Slab',serif;font-size:1.5rem;font-weight:700;color:var(--agri-dark);margin-bottom:16px;">What This Report Covers</h3>
+            <div class="ins-item">
+              <div class="ins-num">01</div>
+              <div><h5>Seasonal Crop Trends</h5><p>Which crops thrive during Kharif vs Rabi seasons and how seasons affect total production volumes across the country.</p></div>
+            </div>
+            <div class="ins-item">
+              <div class="ins-num">02</div>
+              <div><h5>Regional Productivity</h5><p>State-wise breakdown of crop productivity showing which regions lead and which lag in agricultural output per hectare.</p></div>
+            </div>
+            <div class="ins-item">
+              <div class="ins-num">03</div>
+              <div><h5>Long-Term Production Trends</h5><p>Year-over-year analysis from 1997 to 2021 revealing growth patterns, disruptions, and recovery cycles in Indian agriculture.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENARIOS -->
+    <section id="scenarios" class="section light-background" style="padding:90px 0;">
+      <div class="container">
+        <div class="sec-hdr" data-aos="fade-up">
+          <span class="stag"><i class="bi bi-people-fill"></i> Use Case Scenarios</span>
+          <h2>Who Benefits from This Analysis?</h2>
+          <p>This agricultural data analysis serves diverse stakeholders &mdash; from small-scale farmers optimizing yields, to government policy analysts designing interventions, to agribusiness investors identifying growth opportunities.</p>
+        </div>
+        <div class="row gy-4">
+          <!-- Scenario 1 -->
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="sc-card sc-farmer">
+              <div class="sc-band"></div>
+              <div class="sc-body">
+                <span class="sc-badge"><i class="bi bi-flag-fill"></i> Scenario 1</span>
+                <div class="persona">
+                  <div class="avatar"><i class="bi bi-person-fill"></i></div>
+                  <div><p class="pname">Rajesh</p><p class="prole">Small-Scale Farmer &middot; Uttar Pradesh</p></div>
+                </div>
+                <p>Rajesh is a small-scale farmer in Uttar Pradesh who wants to maximize his crop yield and income. However, he struggles to decide which crops to grow each season due to changing weather patterns and market demand.</p>
+                <p>By analyzing historical agricultural data (1997&ndash;2021), Rajesh needs insights into seasonal crop trends, regional productivity, and high-performing crops to make better farming decisions and reduce risk.</p>
+                <ul class="sc-needs">
+                  <li><i class="bi bi-check-circle-fill"></i> Seasonal crop trend analysis</li>
+                  <li><i class="bi bi-check-circle-fill"></i> Regional productivity benchmarking</li>
+                  <li><i class="bi bi-check-circle-fill"></i> High-performing crop identification</li>
+                  <li><i class="bi bi-check-circle-fill"></i> Risk reduction through data insights</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!-- Scenario 2 -->
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="sc-card sc-analyst">
+              <div class="sc-band"></div>
+              <div class="sc-body">
+                <span class="sc-badge"><i class="bi bi-building-fill"></i> Scenario 2</span>
+                <div class="persona">
+                  <div class="avatar"><i class="bi bi-person-badge-fill"></i></div>
+                  <div><p class="pname">Ananya</p><p class="prole">Policy Analyst &middot; Ministry of Agriculture</p></div>
+                </div>
+                <p>Ananya works with the Ministry of Agriculture and is responsible for designing policies to improve agricultural productivity across India. She needs to identify regions with low crop yield, understand long-term production trends, and evaluate the impact of seasonal variations.</p>
+                <p>Using Tableau dashboards, she aims to uncover patterns in the data to support data-driven policy decisions and allocate resources effectively.</p>
+                <ul class="sc-needs">
+                  <li><i class="bi bi-check-circle-fill"></i> Identify low-yield regions for intervention</li>
+                  <li><i class="bi bi-check-circle-fill"></i> Evaluate seasonal variation impacts</li>
+                  <li><i class="bi bi-check-circle-fill"></i> Long-term production trend analysis</li>
+                  <li><i class="bi bi-check-circle-fill"></i> Data-driven resource allocation</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!-- Scenario 3 -->
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="sc-card sc-investor">
+              <div class="sc-band"></div>
+              <div class="sc-body">
+                <span class="sc-badge"><i class="bi bi-graph-up-arrow"></i> Scenario 3</span>
+                <div class="persona">
+                  <div class="avatar"><i class="bi bi-briefcase-fill"></i></div>
+                  <div><p class="pname">Vikram</p><p class="prole">Agribusiness Investor</p></div>
+                </div>
+                <p>Vikram is an agribusiness investor looking to invest in high-growth agricultural sectors. He needs to analyze historical crop production data to identify profitable crops, emerging trends, and regions with consistent growth.</p>
+                <p>By leveraging visual analytics in Tableau, Vikram seeks to minimize investment risk and make informed decisions on where and what to invest in the agricultural market.</p>
+                <ul class="sc-needs">
+                  <li><i class="bi bi-check-circle-fill"></i> Identify high-growth profitable crops</li>
+                  <li><i class="bi bi-check-circle-fill"></i> Emerging market trend detection</li>
+                  <li><i class="bi bi-check-circle-fill"></i> Regions with consistent growth patterns</li>
+                  <li><i class="bi bi-check-circle-fill"></i> Investment risk minimization</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="section" style="background:#fff;padding:80px 0;">
+      <div class="container">
+        <div class="sec-hdr" data-aos="fade-up">
+          <span class="stag"><i class="bi bi-speedometer2"></i> Interactive Dashboard</span>
+          <h2>Agricultural Production Dashboard</h2>
+          <p>Comprehensive Analysis of Agricultural Production of India (1997&ndash;2021). Explore crop-wise, region-wise, and season-wise breakdowns through fully interactive Tableau visualizations.</p>
+        </div>
+        <div data-aos="fade-up" data-aos-delay="100">
+          <div class="viz-wrap">
+            <div class='tableauPlaceholder' id='viz1783255400843' style='position: relative'>
+              <noscript><a href='#'><img alt='Comprehensive Analysis of Agricultural Production of India(1997-2021)' src='https://public.tableau.com/static/images/KQ/KQNT5ZFPM/1_rss.png' style='border: none' /></a></noscript>
+              <object class='tableauViz' style='display:none;'>
+                <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
+                <param name='embed_code_version' value='3' />
+                <param name='path' value='shared/KQNT5ZFPM' />
+                <param name='toolbar' value='yes' />
+                <param name='static_image' value='https://public.tableau.com/static/images/KQ/KQNT5ZFPM/1.png' />
+                <param name='animate_transition' value='yes' />
+                <param name='display_static_image' value='yes' />
+                <param name='display_spinner' value='yes' />
+                <param name='display_overlay' value='yes' />
+                <param name='display_count' value='yes' />
+                <param name='language' value='en-US' />
+              </object>
+            </div>
+            <script type='text/javascript'>
+              var divElement = document.getElementById('viz1783255400843');
+              var vizElement = divElement.getElementsByTagName('object')[0];
+              if (divElement.offsetWidth > 800) { vizElement.style.width='100%'; vizElement.style.minHeight='1107px'; vizElement.style.maxHeight='1407px'; vizElement.style.height=(divElement.offsetWidth*0.75)+'px'; } else if (divElement.offsetWidth > 500) { vizElement.style.width='100%'; vizElement.style.minHeight='1107px'; vizElement.style.maxHeight='1407px'; vizElement.style.height=(divElement.offsetWidth*0.75)+'px'; } else { vizElement.style.width='100%'; vizElement.style.height='3727px'; }
+              var scriptElement = document.createElement('script'); scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js'; vizElement.parentNode.insertBefore(scriptElement, vizElement);
+            </script>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY -->
+    <section id="story" class="section light-background" style="padding:80px 0;">
+      <div class="container">
+        <div class="sec-hdr" data-aos="fade-up">
+          <span class="stag"><i class="bi bi-book-half"></i> Guided Visual Story</span>
+          <h2>Agricultural Insights Story</h2>
+          <p>A guided visual story through India's agricultural production trends from 1997 to 2021. Each chapter takes you through a curated narrative &mdash; from overarching production trends to granular crop and region-specific revelations.</p>
+        </div>
+        <div data-aos="fade-up" data-aos-delay="100">
+          <div class="viz-wrap">
+            <div class='tableauPlaceholder' id='viz1783255513666' style='position: relative'>
+              <noscript><a href='#'><img alt='Agricultural Insights Story' src='https://public.tableau.com/static/images/Co/ComprehensiveAnalysisofAgriculturalProductionofIndia1997-2021/Story1/1_rss.png' style='border: none' /></a></noscript>
+              <object class='tableauViz' style='display:none;'>
+                <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
+                <param name='embed_code_version' value='3' />
+                <param name='site_root' value='' />
+                <param name='name' value='ComprehensiveAnalysisofAgriculturalProductionofIndia1997-2021/Story1' />
+                <param name='tabs' value='no' />
+                <param name='toolbar' value='yes' />
+                <param name='static_image' value='https://public.tableau.com/static/images/Co/ComprehensiveAnalysisofAgriculturalProductionofIndia1997-2021/Story1/1.png' />
+                <param name='animate_transition' value='yes' />
+                <param name='display_static_image' value='yes' />
+                <param name='display_spinner' value='yes' />
+                <param name='display_overlay' value='yes' />
+                <param name='display_count' value='yes' />
+                <param name='language' value='en-US' />
+              </object>
+            </div>
+            <script type='text/javascript'>
+              var divElement = document.getElementById('viz1783255513666');
+              var vizElement = divElement.getElementsByTagName('object')[0];
+              vizElement.style.width='100%'; vizElement.style.height=(divElement.offsetWidth*0.75)+'px';
+              var scriptElement = document.createElement('script'); scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js'; vizElement.parentNode.insertBefore(scriptElement, vizElement);
+            </script>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INSIGHTS -->
+    <section id="insights" class="section" style="background:#fff;padding:90px 0;">
+      <div class="container">
+        <div class="sec-hdr" data-aos="fade-up">
+          <span class="stag"><i class="bi bi-lightbulb-fill"></i> Key Insights</span>
+          <h2>What the Data Reveals</h2>
+          <p>Through visual analytics, stakeholders can uncover patterns, identify areas of growth or concern, and make data-driven decisions that impact millions of farmers and the nation's food security.</p>
+        </div>
+        <div class="row gy-2">
+          <div class="col-lg-6" data-aos="fade-right" data-aos-delay="100">
+            <div class="ins-item"><div class="ins-num">01</div><div><h5>Kharif Dominates Production</h5><p>Rice, sugarcane, and cotton &mdash; all Kharif crops &mdash; consistently account for the largest share of India's total agricultural output. Monsoon dependency remains a critical factor.</p></div></div>
+            <div class="ins-item"><div class="ins-num">02</div><div><h5>Wheat Belt Consistency</h5><p>Punjab, Haryana, and Uttar Pradesh dominate Rabi wheat production, though yield improvements have plateaued in recent years, signaling a need for technological intervention.</p></div></div>
+            <div class="ins-item"><div class="ins-num">03</div><div><h5>Regional Yield Disparities</h5><p>Significant yield gaps exist between states &mdash; high-productivity states achieve 2&ndash;3x yields compared to states in central and eastern India, highlighting unequal resource distribution.</p></div></div>
+            <div class="ins-item"><div class="ins-num">04</div><div><h5>Horticultural Crop Growth</h5><p>Post-2005, horticulture (fruits and vegetables) has shown remarkable growth, with overall production nearly doubling &mdash; presenting significant investment opportunity.</p></div></div>
+          </div>
+          <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
+            <div class="ins-item"><div class="ins-num">05</div><div><h5>Climate-Induced Volatility</h5><p>Years with deficient monsoons (e.g., 2002, 2009, 2014) show clear production dips &mdash; quantifying the vulnerability of rain-fed agriculture to climate variability.</p></div></div>
+            <div class="ins-item"><div class="ins-num">06</div><div><h5>Pulse Production Challenges</h5><p>Despite India being a top pulse producer, per-capita availability has remained stagnant. Yield stagnation in lentils and chickpeas signals structural challenges in pulse cultivation.</p></div></div>
+            <div class="ins-item"><div class="ins-num">07</div><div><h5>Oilseed Diversification</h5><p>Soybean production from Madhya Pradesh and Rajasthan has surged, providing income diversification for farmers in rain-shadow regions previously dependent on cereals.</p></div></div>
+            <div class="ins-item"><div class="ins-num">08</div><div><h5>Policy Impact Visible</h5><p>MSP (Minimum Support Price) revisions clearly correlate with area expansion for targeted crops, demonstrating that policy signals translate directly into farmer behavior changes.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq-9 faq section light-background" id="faq" style="padding:80px 0;">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-5" data-aos="fade-up">
+            <h2 class="faq-title">Frequently Asked Questions</h2>
+            <p class="faq-description">Find answers to common questions about India's agricultural data, the methodology used, and how to best interpret the visualizations in this report.</p>
+            <div class="faq-arrow d-none d-lg-block" data-aos="fade-up" data-aos-delay="200">
+              <svg class="faq-arrow" width="200" height="211" viewBox="0 0 200 211" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M198.804 194.488C189.279 189.596 179.529 185.52 169.407 182.07L169.384 182.049C169.227 181.994 169.07 181.939 168.912 181.884C166.669 181.139 165.906 184.546 167.669 185.615C174.053 189.473 182.761 191.837 189.146 195.695C156.603 195.912 119.781 196.591 91.266 179.049C62.5221 161.368 48.1094 130.695 56.934 98.891C84.5539 98.7247 112.556 84.0176 129.508 62.667C136.396 53.9724 146.193 35.1448 129.773 30.2717C114.292 25.6624 93.7109 41.8875 83.1971 51.3147C70.1109 63.039 59.63 78.433 54.2039 95.0087C52.1221 94.9842 50.0776 94.8683 48.0703 94.6608C30.1803 92.8027 11.2197 83.6338 5.44902 65.1074C-1.88449 41.5699 14.4994 19.0183 27.9202 1.56641C28.6411 0.625793 27.2862 -0.561638 26.5419 0.358501C13.4588 16.4098 -0.221091 34.5242 0.896608 56.5659C1.8218 74.6941 14.221 87.9401 30.4121 94.2058C37.7076 97.0203 45.3454 98.5003 53.0334 98.8449C47.8679 117.532 49.2961 137.487 60.7729 155.283C87.7615 197.081 139.616 201.147 184.786 201.155L174.332 206.827C172.119 208.033 174.345 211.287 176.537 210.105C182.06 207.125 187.582 204.122 193.084 201.144C193.346 201.147 195.161 199.887 195.423 199.868C197.08 198.548 193.084 201.144 195.528 199.81C196.688 199.192 197.846 198.552 199.006 197.935C200.397 197.167 200.007 195.087 198.804 194.488ZM60.8213 88.0427C67.6894 72.648 78.8538 59.1566 92.1207 49.0388C98.8475 43.9065 106.334 39.2953 114.188 36.1439C117.295 34.8947 120.798 33.6609 124.168 33.635C134.365 33.5511 136.354 42.9911 132.638 51.031C120.47 77.4222 86.8639 93.9837 58.0983 94.9666C58.8971 92.6666 59.783 90.3603 60.8213 88.0427Z" fill="currentColor"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="col-lg-7" data-aos="fade-up" data-aos-delay="300">
+            <div class="faq-container">
+              <div class="faq-item faq-active" id="faq-1">
+                <h3>What data source is used for this agricultural analysis?</h3>
+                <div class="faq-content"><p>The data is sourced from India's official agricultural statistics compiled by the Ministry of Agriculture and Farmers' Welfare. The dataset covers crop-wise, district-wise, and season-wise production data from 1997 to 2021, spanning 25 years of India's agricultural history.</p></div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div>
+              <div class="faq-item" id="faq-2">
+                <h3>What does "Season" mean in the context of this report?</h3>
+                <div class="faq-content"><p>India has three main agricultural seasons: <strong>Kharif</strong> (sown June&ndash;July, harvested October&ndash;November, e.g., rice, cotton, maize), <strong>Rabi</strong> (sown October&ndash;November, harvested March&ndash;April, e.g., wheat, mustard, barley), and <strong>Zaid</strong> (short summer crops like cucumber and bitter gourd). Each season presents distinct crop-growing conditions and challenges.</p></div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div>
+              <div class="faq-item" id="faq-3">
+                <h3>How can a small-scale farmer use these dashboards?</h3>
+                <div class="faq-content"><p>Farmers can filter the Tableau dashboard by their state and crop type to understand historical yield patterns. By comparing their region's performance against others, they can identify high-performing crops suited for their area, optimal sowing seasons, and long-term demand trends &mdash; enabling smarter crop selection decisions.</p></div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div>
+              <div class="faq-item" id="faq-4">
+                <h3>What tools were used to create this report?</h3>
+                <div class="faq-content"><p>All visualizations, dashboards, and the guided Story were created using <strong>Tableau Public</strong>. The data was cleaned and pre-processed before ingestion into Tableau. The web interface was built using HTML, CSS (Bootstrap), and JavaScript to present the embedded Tableau workbooks alongside contextual analysis.</p></div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div>
+              <div class="faq-item" id="faq-5">
+                <h3>How should an investor interpret the production trend charts?</h3>
+                <div class="faq-content"><p>Investors should look for crops showing consistent year-over-year area expansion alongside growing production volumes. States where yield per hectare has been climbing steadily over a decade indicate efficiency improvements driven by technology adoption, presenting strong investment potential in input supply chains and agri-processing.</p></div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div>
+              <div class="faq-item" id="faq-6">
+                <h3>Can the dashboards be explored interactively?</h3>
+                <div class="faq-content"><p>Yes! The embedded Tableau dashboards are fully interactive. You can hover over data points for tooltips, click to filter by crop, season, or state, and use the built-in Tableau toolbar to drill down, zoom, and download views. The Story panel guides you through narrative chapters with annotated visual insights.</p></div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section" style="background:#fff;padding:80px 0;">
+      <div class="container">
+        <div class="sec-hdr" data-aos="fade-up">
+          <span class="stag"><i class="bi bi-envelope-fill"></i> Get In Touch</span>
+          <h2>Contact Us</h2>
+          <p>Have questions about this agricultural analysis report, the data, or the Tableau visualizations? Reach out and we will be happy to help.</p>
+        </div>
+        <div class="row gy-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="col-lg-5" data-aos="fade-right" data-aos-delay="200">
+            <div class="cg-card">
+              <i class="bi bi-leaf-fill" style="font-size:1.9rem;color:hsl(42,90%,65%);margin-bottom:14px;display:block;"></i>
+              <h3>AgriVision India</h3>
+              <p>We are passionate about making India's agricultural data accessible and actionable for farmers, policymakers, and investors alike.</p>
+              <div class="ci"><i class="bi bi-envelope-fill"></i><div><h4>Email</h4><p>info@agrivisionindia.in</p></div></div>
+              <div class="ci"><i class="bi bi-geo-alt-fill"></i><div><h4>Location</h4><p>New Delhi, India</p></div></div>
+              <div class="ci"><i class="bi bi-bar-chart-fill"></i><div><h4>Data Period</h4><p>1997&ndash;2021 &middot; Ministry of Agriculture</p></div></div>
+              <div style="display:flex;gap:10px;margin-top:16px;">
+                <a href="#" style="color:hsl(42,90%,65%);font-size:1.2rem;"><i class="bi bi-twitter"></i></a>
+                <a href="#" style="color:hsl(42,90%,65%);font-size:1.2rem;"><i class="bi bi-linkedin"></i></a>
+                <a href="#" style="color:hsl(42,90%,65%);font-size:1.2rem;"><i class="bi bi-github"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-7" data-aos="fade-left" data-aos-delay="300">
+            <div class="fwrap">
+              <form action="forms/contact.php" method="post" class="php-email-form">
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="name">Your Name</label>
+                    <input type="text" name="name" class="form-control" id="name" placeholder="Rajesh Kumar" required="">
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="email">Your Email</label>
+                    <input type="email" class="form-control" name="email" id="email" placeholder="rajesh@example.com" required="">
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="subject">Subject</label>
+                  <input type="text" class="form-control" name="subject" id="subject" placeholder="Query about agricultural data" required="">
+                </div>
+                <div class="mb-3">
+                  <label for="message">Message</label>
+                  <textarea class="form-control" name="message" rows="6" placeholder="Your message here..." required=""></textarea>
+                </div>
+                <div class="my-3">
+                  <div class="loading">Loading</div>
+                  <div class="error-message"></div>
+                  <div class="sent-message">Your message has been sent. Thank you!</div>
+                </div>
+                <div class="text-center">
+                  <button type="submit" class="btn-send"><i class="bi bi-send-fill me-2"></i>Send Message</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer" class="agri-footer">
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-center gap-2 mb-2">
+        <i class="bi bi-flower1" style="font-size:1.3rem;color:hsl(42,90%,60%);"></i>
+        <h3 class="sn">AgriVision India</h3>
+      </div>
+      <p>A comprehensive visual analytics report on India's agricultural cultivation trends (1997&ndash;2021), powered by Tableau &mdash; enabling smarter decisions for farmers, policymakers, and investors.</p>
+      <div class="sl d-flex justify-content-center">
+        <a href=""><i class="bi bi-twitter-x"></i></a>
+        <a href=""><i class="bi bi-facebook"></i></a>
+        <a href=""><i class="bi bi-linkedin"></i></a>
+        <a href=""><i class="bi bi-github"></i></a>
+      </div>
+      <div class="cp">
+        Copyright &copy; 2025 <strong>AgriVision India</strong> &middot; All Rights Reserved
+      </div>
+      <div class="cr">
+        Designed using <a href="https://bootstrapmade.com/">BootstrapMade</a> template &amp; Tableau Visual Analytics
+      </div>
+    </div>
+  </footer>
+
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  <div id="preloader"></div>
+
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/js/main.js"></script>
+
+</body>
+</html>
