@@ -63,7 +63,6 @@ India-s-Agricultural-Crop-Production-Analysis
 │
 ├── Dataset
 ├── Dashboard Screenshots
-├── Story Screenshots
 ├── Project Report
 ├── Static
 ├── Template
