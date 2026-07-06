@@ -64,7 +64,6 @@ India-s-Agricultural-Crop-Production-Analysis
 ├── Dataset
 ├── Dashboard Screenshots
 ├── Story Screenshots
-├── Tableau Workbook
 ├── Project Report
 ├── Static
 ├── Template
@@ -100,15 +99,18 @@ India-s-Agricultural-Crop-Production-Analysis
 
 ### Home Page
 
-*(Add Screenshot)*
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/2e403d72-0cc9-4eb3-84be-c509b4c96b2f" />
+
 
 ### Dashboard
 
-*(Add Screenshot)*
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/ccfdbb93-d82a-4ee4-aab8-713fa1ac25f6" />
+
 
 ### Tableau Story
 
-*(Add Screenshot)*
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/307f874c-d2e3-4dcc-9cae-74da064e2537" />
+
 
 ---
 
@@ -153,7 +155,7 @@ The complete project report is available in the **Project Report** folder of thi
 
 ## 👨‍💻 Team Members
 
-- Hanisha Kovvuri (Team Lead)
+- Hanisha Kovvuri 
 - Mohammad Shafiya Begum
 - Lasya Donthumalla
 - Keerthi Sri Pandranki
