@@ -104,6 +104,7 @@ By converting raw agricultural data into meaningful visualizations, the project 
 
 **Project Website:**  
 https://india-agrivision.vercel.app/
+
 **Project Video Link:** 
 https://drive.google.com/file/d/1_9zUmZnsdhfvGFfy5YDv1XQ_Sqfs3TKi/view
 
